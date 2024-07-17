@@ -8,8 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundColor: {
+        "button": '#003498',
+        "home": "#F6F6F6",
+        "page2": "#1D1D1D",
+        "page3": "#1D1D1D",
+        "page5": "#F9F9F9"
+      },
 
     },
+
   },
   plugins: [],
 };
