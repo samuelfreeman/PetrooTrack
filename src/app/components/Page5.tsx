@@ -7,21 +7,21 @@ const Page5 = () => {
             <button className=" bg-button  w-[500px] py-4 px-40 rounded-md text-white">Subscribe</button>
         </div>
         <div className="py-9 px-20 mt-10 flex justify-between">
-            <ul className=" text-2xl py-7">
-                <li className="text-3xl">PetroTrack</li>
+            <ul className=" text-xl py-7">
+                <li className="text-2xl">PetroTrack</li>
                 <li className="text-gray-800 py-2">Our Team</li>
                 <li className="text-gray-800 py-2">Our Process</li>
                 <li className="text-gray-800 py-2">Our Services</li>
             </ul>
             <div>
-                <h1 className="text-3xl py-7">Operational work hours</h1>
+                <h1 className="text-2xl py-7">Operational work hours</h1>
                 <table className="w-full text-left border-collapse">
                     <tbody>
-                        <tr className="border-b border-black text-2xl">
+                        <tr className="border-b border-black text-xl">
                             <td className="py-2 px-4">Mon - Wed</td>
                             <td className="py-2 px-4">: 7AM - 8PM</td>
                         </tr>
-                        <tr className="border-b border-black text-2xl">
+                        <tr className="border-b border-black text-xl">
                             <td className="py-2 px-4">Thur - Sun</td>
                             <td className="py-2 px-4">: 7AM - 7PM</td>
                         </tr>
