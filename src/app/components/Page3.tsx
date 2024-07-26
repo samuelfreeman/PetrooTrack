@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import Link from "next/link";
 const Page3 = () => {
     return (<div className="h-[750px] w-full p-16">
         <div className="flex justify-between">
@@ -32,10 +32,12 @@ const Page3 = () => {
             </div>
         </div>
         <div className="mt-10">
-            <h1 className=" text-4xl w-full  text-center py-4">Efficient solutions for your filling station <br /> management needs</h1>
+            <h1 className=" text-3xl w-full  text-center py-4">Efficient solutions for your filling station <br /> management needs</h1>
             <div className=" w-full flex justify-center py-4">
 
-                <button className="bg-button py-3 px-6 text-xl  text-white rounded-md">Learn More</button>
+
+                <h1 className="bg-button py-3 px-6 text-xl text-white rounded-md">
+                    <Link href="/learnMore">Learn More</Link></h1>
             </div>
         </div>
 
