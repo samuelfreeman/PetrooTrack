@@ -38,7 +38,9 @@ const Header = () => {
 
                 </ul>
             </nav>
-            <button className="p-2 px-6 text-white rounded-md bg-button">Get Started</button>
+            <Link href={"/services"}>
+                <button className="p-2 px-6 text-white rounded-md bg-button">Get Started</button>
+            </Link>
         </nav >
 
     </div>);
