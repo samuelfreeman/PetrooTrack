@@ -1,7 +1,7 @@
-import Collaboration from "../components/Collaboration";
-import Footer from "../components/Footer";
-import Page2 from "../components/Page2";
-import Solution from "../components/Solutions";
+import Collaboration from "../../components/Collaboration";
+import Footer from "../../components/Footer";
+import Page2 from "../../components/Page2";
+import Solution from "../../components/Solutions";
 
 const aboutUs = () => {
 
@@ -23,9 +23,9 @@ const aboutUs = () => {
                 <Solution />
             </div>
 
-                <Collaboration />
+            <Collaboration />
             <div className="mt-10">
-<Footer/>
+                <Footer />
             </div >
         </div>);
 }

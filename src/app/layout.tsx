@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
+import Header from "../components/Header";
 
 
 
@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
 
   children,
-  params
+
 }: Readonly<{
   children: React.ReactNode;
-  params: { path: string }
+  'arial-label': string
 }>) {
-  const { path } = params
+
   return (
     <html lang="en">
 

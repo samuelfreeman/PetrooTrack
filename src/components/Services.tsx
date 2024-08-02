@@ -86,9 +86,27 @@ const Service = () => {
             </div>
  <div className="w-full  flex flex-col items-center text-center">
     <h1  className="text-2xl py-16 w-[742px]">Click on the button below to record day and night sales, manage transaction and enter other details.</h1>
-  <Link href="/record">
-  <button className="py-4 text-lg rounded-md px-10 bg-button text-white">Record Sales</button>
+
+
+    <div className="flex gap-x-24">
+    <Link href="/tables">
+  <button className="py-4 text-lg rounded-md px-10 bg-button text-white">Record Fuel Products</button>
   </Link>
+
+
+  <Link href="/customers">
+  <button className="py-4 text-lg rounded-md px-10 bg-button text-white">Record Customers</button>
+  </Link>
+
+  <Link href="/transactions">
+  <button className="py-4 text-lg rounded-md px-10 bg-button text-white">Record Transaction</button>
+  </Link>
+  <Link href="/inventory">
+  <button className="py-4 text-lg rounded-md px-10 bg-button text-white">View Inventory</button>
+  </Link>
+    </div>
+ 
+
  </div>
 
         </div>

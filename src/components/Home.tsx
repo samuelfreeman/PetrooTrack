@@ -3,7 +3,7 @@ import Image from "next/image";
 // import image1 from '@/app/assests/image1.png'
 const list = ["GOIL", "ALLIED", "SHELL", "UNITY"]
 const customer = '/image1.png'
-import Rating from "./Start";
+import Rating from "./ui/Start";
 const Page1 = () => {
     return (<div className="w-full h-[ 644px] pb-16 bg-home px-5 pt-24">
         <div className="flex justify-between">

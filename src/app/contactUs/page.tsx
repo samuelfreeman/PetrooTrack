@@ -1,7 +1,7 @@
 
 import Image from "next/image";
-import Page5 from "../components/Page5";
-import Footer from "../components/Footer";
+import Page5 from "../../components/Page5";
+import Footer from "../../components/Footer";
 
 const contactUs = () => {
     const images: string[] = ['/call.svg', '/mail.svg', '/time.svg'];
@@ -82,17 +82,17 @@ const contactUs = () => {
         </div>
 
 
-<div>
-    <Image
-    src="/map.svg"
-    alt="map"
-    width={1000}
-    height={10000}
-    className="w-[1330px]  h-[575px] m-10 ml-52"
-    />
-</div>
-<Page5/>
-<Footer/>
+        <div>
+            <Image
+                src="/map.svg"
+                alt="map"
+                width={1000}
+                height={10000}
+                className="w-[1330px]  h-[575px] m-10 ml-52"
+            />
+        </div>
+        <Page5 />
+        <Footer />
 
     </div>);
 }
