@@ -9,70 +9,45 @@ import { Inventory } from "./columns";
 dotenv.config();
 
 export async function getData(): Promise<Inventory[]> {
-    const client = await db.connect()
+    const client = await db.connect();
 
-
-    // sum all quantity in stock 
     try {
-        // Sum all transactions
-        const dieselAmountResult: any = await sql`SELECT SUM(totalamount) AS amount FROM transactions WHERE fueltype = 'Diesel';`;
+        // Perform all sum queries in parallel
+        const [
+            dieselAmountResult,
+            petrolAmountResult,
+            petrolLitresResult,
+            dieselLitresResult
+        ] = await Promise.all([
+            sql`SELECT SUM(totalamount) AS amount FROM transactions WHERE fueltype = 'Diesel';`,
+            sql`SELECT SUM(totalamount) AS amount FROM transactions WHERE fueltype = 'Petrol';`,
+            sql`SELECT SUM(quantityInstock) AS liters FROM fuelProduct WHERE fueltype = 'Petrol';`,
+            sql`SELECT SUM(quantityInstock) AS liters FROM fuelProduct WHERE fueltype = 'Diesel';`
+        ]);
+
+        // Extract results with null checks
         const dieselAmount: number = dieselAmountResult.rows[0]?.amount || 0;
-        console.log("diesel amount", dieselAmount)
+        const petrolAmount: number = petrolAmountResult.rows[0]?.amount || 0;
+        const petrolLitres: number = petrolLitresResult.rows[0]?.liters || 0;
+        const dieselLitres: number = dieselLitresResult.rows[0]?.liters || 0;
 
-        const petrolAmountResult: any = await sql`SELECT SUM(totalamount) AS amount FROM transactions WHERE fueltype = 'Petrol';`;
-        const petrolAmount = petrolAmountResult.rows[0]?.amount || 0;
+        // Perform all updates in parallel
+        await Promise.all([
+            sql`UPDATE inventory SET totalamount = ${dieselAmount} WHERE fueltype = 'Diesel';`,
+            sql`UPDATE inventory SET totalamount = ${petrolAmount} WHERE fueltype = 'Petrol';`,
+            sql`UPDATE inventory SET litres = ${petrolLitres} WHERE fueltype = 'Petrol';`,
+            sql`UPDATE inventory SET litres = ${dieselLitres} WHERE fueltype = 'Diesel';`
+        ]);
 
-
-        // Sum all quantity in stock
-        const petrolLitresResult: any = await sql`SELECT SUM(quantityInstock) AS liters FROM fuelProduct WHERE fueltype = 'Petrol';`;
-        const petrolLitres = petrolLitresResult.rows[0]?.liters || 0;
-
-
-        const dieselLitresResult: any = await client.sql`SELECT SUM(quantityInstock) AS liters FROM fuelProduct WHERE fueltype = 'Diesel';`;
-        const dieselLitres = dieselLitresResult.rows[0]?.liters || 0;
-
-
-
-
-
-
-        // update amount for the disel
-
-
-        await sql`
-         UPDATE inventory 
-         SET  totalamount =${dieselAmount}
-         WHERE fueltype = 'Diesel';`;
-
-
-        await sql`
-         UPDATE inventory 
-         SET  totalamount =${petrolAmount}
-         WHERE fueltype = 'Petrol';`;
-
-
-
-        await sql`
-         UPDATE inventory 
-         SET  litres =${petrolLitres}
-         WHERE fueltype = 'Petrol';`;
-
-        await sql`
-         UPDATE inventory 
-         SET  litres =${dieselLitres}
-         WHERE fueltype = 'Diesel';`;
-
-
-        const result = await sql`SELECT * FROM inventory  ORDER BY created_at DESC;`;
+        // Fetch and return updated inventory
+        const result = await sql`SELECT * FROM inventory ORDER BY created_at DESC;`;
         const inventory: Inventory[] = result.rows as Inventory[];
         return inventory;
 
-
-
     } catch (error) {
-        console.log(error)
-
+        console.error(error);
         return [];
+    } finally {
+        client.release(); // Ensure the client is released after all operations
     }
-
 }
