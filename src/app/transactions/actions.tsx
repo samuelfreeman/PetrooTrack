@@ -28,8 +28,8 @@ FROM transactions
 JOIN customers ON transactions.customer = customers.id
 
 ORDER BY created_at DESC`;
-        console.log(response.rows);
-        return response.rows;
+const transactions: Transaction[] = response.rows as Transaction[];
+return transactions;
     } catch (error) {
         console.error('Database Error:', error);
         return [];

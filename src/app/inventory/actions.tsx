@@ -64,14 +64,15 @@ export async function getData(): Promise<Inventory[]> {
 
 
         const result = await sql`SELECT * FROM inventory  ORDER BY created_at DESC;`;
-
-        return result.rows;
+        const inventory: Inventory[] = result.rows as Inventory[];
+        return inventory;
 
 
 
     } catch (error) {
         console.log(error)
+
+        return [];
     }
-    revalidatePath("/inventory")
 
 }

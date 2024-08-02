@@ -12,7 +12,9 @@ export async function getData(): Promise<Customer[]> {
         const client = await db.connect();
         const response = await client.sql`SELECT * FROM customers ORDER BY created_at DESC`;
         console.log(response.rows);
-        return response.rows;
+
+        const customers: Customer[] = response.rows as Customer[];
+        return customers;
     } catch (error) {
         console.error('Database Error:', error);
         return [];

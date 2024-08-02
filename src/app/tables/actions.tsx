@@ -18,10 +18,13 @@ export async function getData(): Promise<Fuel[]> {
     const client = await db.connect()
     const response = await client.sql`SELECT * FROM fuelProduct ORDER BY created_at DESC`;
     console.log("fetched data from database")
-    return response.rows;
+    const fuel: Fuel[] = response.rows as Fuel[];
+    return fuel;
 
   } catch (error) {
     console.error('Database Error:', error);
+
+    return [];
   }
 
 
