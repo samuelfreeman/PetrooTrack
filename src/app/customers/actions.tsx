@@ -1,13 +1,15 @@
 "use server"
 import { sql } from "@vercel/postgres";
 import { db } from "@vercel/postgres";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore } from "next/cache";
 import { redirect } from "next/navigation";
 import dotenv from "dotenv";
 import { Customer } from "./columns";
 dotenv.config();
 
 export async function getData(): Promise<Customer[]> {
+    unstable_noStore()
+    
     try {
         const client = await db.connect();
         const response = await client.sql`SELECT * FROM customers ORDER BY created_at DESC`;
@@ -33,6 +35,7 @@ export type State = {
 
 // Insert into customers table
 export async function addCustomer(payload: State, formData: FormData): Promise<State> {
+    unstable_noStore()
     try {
         const name = formData.get('name') as string;
         const email = formData.get('email') as string;
@@ -88,6 +91,7 @@ export async function updateCustomer(
 }
 
 export async function fetchCustomerById(id: string): Promise<Customer | null> {
+    unstable_noStore()
     try {
         console.log(id);
         const data = await sql<Customer>`

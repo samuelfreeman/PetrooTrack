@@ -24,12 +24,12 @@ export async function getData(): Promise<Transaction[]> {
     transactions.fueltype,
     transactions.paymentmethod,
     customers.name as customer
-FROM transactions
-JOIN customers ON transactions.customer = customers.id
+    FROM transactions
+    JOIN customers ON transactions.customer = customers.id
 
 ORDER BY created_at DESC`;
-const transactions: Transaction[] = response.rows as Transaction[];
-return transactions;
+        const transactions: Transaction[] = response.rows as Transaction[];
+        return transactions;
     } catch (error) {
         console.error('Database Error:', error);
         return [];
@@ -60,15 +60,33 @@ export async function addTransaction(payload: State, formData: FormData): Promis
         console.log(quantity)
         console.log(paymentmethod)
         console.log(totalamount)
-        const response = await sql`
-          INSERT INTO transactions ( totalamount, customer, quantity, fueltype, paymentmethod) 
-          VALUES ( ${totalamount}, ${customer}, ${quantity}, ${fueltype}, ${paymentmethod})
-        `;
-        console.log(response.rows);
 
+        await sql`BEGIN;`
+        const initialAmount = await sql`SELECT totalamount  FROM  inventory;`
+
+        await sql`
+          INSERT INTO transactions ( totalamount, customer, quantity, fueltype, paymentmethod) 
+          VALUES ( ${totalamount}, ${customer}, ${quantity}, ${fueltype}, ${paymentmethod});
+        `
+        await sql` 
+        UPDATE  inventory 
+        SET totalamount = totalamount + ${totalamount}
+        WHERE   fueltype = ${fueltype};`
+
+
+
+        const updatedAmount = await sql`SELECT totalamount FROM inventory;`
+
+        if (updatedAmount > initialAmount) {
+            await sql`COMMIT;`
+        }
+        else {
+            await sql`ROLLBACK;`
+        }
     } catch (error) {
         console.error("Database Error:", error); // Log the error for debugging purposes
     }
+    revalidatePath('/inventory');
     revalidatePath('/transactions');
     redirect("/transactions");
 }
@@ -86,7 +104,7 @@ export async function updateTransaction(
     const paymentmethod = formData.get('paymentmethod') as string;
     const totalamount = Number(formData.get('totalamount') as string);
 
-    
+
     console.log("id:", id);
     console.log("fueltype:", fueltype);
     console.log("customer:", customer);
@@ -117,7 +135,6 @@ export async function fetchTransactionById(id: string): Promise<Transaction | nu
         console.log(id);
         const data = await sql<Transaction>`
           SELECT
-            
             totalamount,
             id,
             customer,

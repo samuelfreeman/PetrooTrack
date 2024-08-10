@@ -51,7 +51,35 @@ export async function addFuelProduct(payload: State, formData: FormData): Promis
     const quantityInStock = Number(formData.get('quantity'));
 
 
-    const response = await sql`INSERT INTO fuelProduct(fuelType ,supplier,quantityInstock,pricePerLiter)  VALUES (${fuelType},${supplier},${quantityInStock},${pricePerLiter});`;
+    await sql`BEGIN`;
+
+
+    const initialQuantity = await sql`SELECT litres FROM inventory WHERE fuelType = ${fuelType};`
+
+
+
+
+    const response = await sql`INSERT INTO fuelProduct(fuelType ,supplier,quantityInstock,pricePerLiter)  VALUES (${fuelType},${supplier},${quantityInStock},${pricePerLiter});
+    
+    `;
+
+    await sql`
+UPDATE inventory 
+SET litres = litres + ${quantityInStock}
+WHERE fueltype = ${fuelType}
+`
+    const updatedQuantity = await sql`SELECT litres FROM inventory WHERE fuelType = ${fuelType};`
+
+
+
+    if (updatedQuantity > initialQuantity) {
+      await sql`COMMIT;`
+    }
+    else {
+      await sql`ROLLBACK;`
+    }
+
+
 
     console.log(response);
 
@@ -85,6 +113,7 @@ export async function updateFuelProduct(
   console.log("pricePerLiter:", pricePerLiter);
   console.log("quantityInStock:", quantityInStock);
   try {
+
     const result = await client.sql`
     UPDATE fuelProduct
         SET fuelType = ${fuelType}, supplier =${supplier}, quantityInStock = ${quantityInStock},pricePerLiter=${pricePerLiter}
@@ -107,6 +136,12 @@ export async function fecthFuelProductById(id: string) {
   try {
 
     console.log(id)
+
+
+
+
+
+
     const data = await sql<Fuel>`
       SELECT
       id,
