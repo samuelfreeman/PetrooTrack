@@ -1,4 +1,3 @@
-
 "use server"
 import { sql } from "@vercel/postgres";
 import { db } from "@vercel/postgres";
@@ -165,7 +164,27 @@ export async function fecthFuelProductById(id: string) {
 export async function deleteFuelProduct(id: string) {
 
   try {
-    await sql`DELETE FROM fuelProduct WHERE id = ${id}`;
+
+    const litres = await sql`SELECT quantityinstock, fuelType  FROM  fuelProduct
+WHERE id = ${id};
+`
+
+console.log(" trying to see the columns in the inventory table")
+
+const  results = await sql`SELECT * FROM inventory;`
+
+console.log(results)
+    console.log(litres)
+    const result = await sql`  UPDATE inventory  
+  SET   litres  = litres - ${litres.rows[0].quantityinstock}
+  WHERE fuelType = ${litres.rows[0].fueltype};`
+
+
+    console.log("update result from the database",result);
+
+  const result2 =   await sql`DELETE FROM fuelProduct WHERE id = ${id}`;
+console.log("deleted the result from the database");
+
     revalidatePath('/tables');
   } catch (error) {
     return {

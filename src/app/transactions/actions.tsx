@@ -155,6 +155,14 @@ export async function fetchTransactionById(id: string): Promise<Transaction | nu
 // Delete a transaction
 export async function deleteTransaction(id: string): Promise<{ message: string }> {
     try {
+        const amount = await sql`SELECT totalamount , fuelType FROM  transactions WHERE id = ${id}`
+
+        const update = await sql`UPDATE inventory
+         SET totalamount = totalamount - ${amount.rows[0].amount}
+         WHERE fuelType = ${amount.rows[0].fuelType}`
+
+
+
         await sql`DELETE FROM transactions WHERE id = ${id}`;
         revalidatePath('/transactions');
         return { message: 'Transaction deleted successfully.' };
